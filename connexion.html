@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion / Inscription</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="connexion-styles.css">
+    <style>
+        /* Styles pour le corps de la page */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url("https://s1.1zoom.me/big0/211/378570-svetik.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Styles pour le conteneur principal */
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Styles pour les onglets */
+        .tab {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+        }
+
+        .tab.active {
+            background-color: #2980b9;
+        }
+
+        /* Styles pour les formulaires */
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Styles pour l'onglet d'inscription (ajouté une section spécifique pour cet onglet) */
+        #registerTab {
+            display: none;
+        }
+
+        /* Anti-clic droit */
+        body {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <button class="tab active" data-tab="login" onclick="showTab('login')">Connexion</button>
+            <button class="tab" data-tab="register" onclick="showTab('register')">Inscription</button>
+        </div>
+        <div id="loginTab">
+            <h2>Connexion</h2>
+            <form onsubmit="return handleLogin()">
+                <div class="form-group">
+                    <label for="loginUsername">Nom d'utilisateur</label>
+                    <input type="text" id="loginUsername" placeholder="Nom d'utilisateur" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <input type="password" id="loginPassword" placeholder="Mot de passe" required>
+                </div>
+                <div class="form-group">
+                    <label for="rememberMe">Se souvenir de moi</label>
+                    <input type="checkbox" id="rememberMe">
+                </div>
+                <button type="submit">Se connecter</button>
+            </form>
+        </div>
+        <div id="registerTab" style="display: none;">
+            <h2>Inscription</h2>
+            <form onsubmit="return handleRegistration()">
+                <div class="form-group">
+                    <label for="registerUsername">Nom d'utilisateur (minimum 3 caractères)</label>
+                    <input type="text" id="registerUsername" placeholder="Nom d'utilisateur" pattern=".{3,}" required title="Nom d'utilisateur doit avoir au moins 3 caractères">
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Mot de passe (minimum 6 caractères)</label>
+                    <input type="password" id="registerPassword" placeholder="Mot de passe" pattern=".{6,}" required title="Mot de passe doit avoir au moins 6 caractères">
+                </div>
+                <button type="submit">S'inscrire</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="connexion-scripts.js" defer></script>
+
+    <script>
+        // Anti-clic droit
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Fonction pour afficher l'onglet sélectionné
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll(".tab");
+            for (const tab of tabs) {
+                tab.classList.remove("active");
+            }
+
+            const tabContent = document.getElementById(tabName + "Tab");
+            tabContent.style.display = "block";
+
+            const otherTab = tabName === "login" ? "register" : "login";
+            const otherTabContent = document.getElementById(otherTab + "Tab");
+            otherTabContent.style.display = "none";
+
+            const activeTab = document.querySelector(`.tab[data-tab=${tabName}]`);
+            activeTab.classList.add("active");
+        }
+
+        // Fonction pour gérer l'inscription
+        function handleRegistration() {
+            const registerUsername = document.getElementById("registerUsername").value;
+            const registerPassword = document.getElementById("registerPassword").value;
+
+            // Validation des entrées utilisateur
+            if (registerUsername.length < 3 || registerPassword.length < 6) {
+                alert("Nom d'utilisateur doit avoir au moins 3 caractères et mot de passe doit avoir au moins 6 caractères.");
+                return false;
+            }
+
+            // Stockage des données dans le localStorage (simulé)
+            let registeredUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+            registeredUsers.push({ username: registerUsername, password: registerPassword });
+            localStorage.setItem("registeredUsers", JSON.stringify(registeredUsers));
+
+            // Alerte pour informer l'utilisateur de l'inscription réussie
+            alert("Inscription réussie ! Vous pouvez maintenant vous connecter.");
+
+            // Redirection vers l'onglet de connexion après une brève pause
+            setTimeout(function () {
+                showTab("login");
+            }, 1000);
+
+            return false;
+        }
+
+        // Fonction pour gérer la connexion
+        function handleLogin() {
+            const loginUsername = document.getElementById("loginUsername").value;
+            const loginPassword = document.getElementById("loginPassword").value;
+
+            // Simulation de stockage des utilisateurs inscrits (localStorage)
+            let registeredUsers = JSON.parse(localStorage.getItem("registeredUsers")) || [];
+
+            // Vérification des informations de connexion
+            const user = registeredUsers.find(user => user.username === loginUsername && user.password === loginPassword);
+
+            if (user) {
+                alert("Connexion réussie !");
+                // Redirection vers la page après la connexion réussie
+                window.location.href = "index.html";
+            } else {
+                alert("Nom d'utilisateur ou mot de passe incorrect !");
+            }
+
+            return false;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+img{
+    width: calc(1920px/10);
+    height: calc(1080px/10);
+}
+.container{
+    margin: 10px 0 0 27%;
+    padding: 10px;
+    width: 39%;
+    border: 15px groove rgba(0, 0, 0, 0.575);
+    box-shadow: 10px 10px 8px rgba(0, 0, 0, 0.424);
+}
+h1{
+    text-align: center;
+}
+
+/*le style appliquer au bouton*/
+
+button{
+    border: 2.5px solid black;
+    background-color: white;
+    color: black;
+    font-size: 22px;
+    font-family: consolas;
+    width: 150px;
+    height: 45px;
+    position: relative;
+    top: 50px;
+    left: 600px;
+    transition-duration: .2s;
+}
+button:hover{
+    background-color: black;
+    color: white;
+    transition-duration: .2s;
+}
